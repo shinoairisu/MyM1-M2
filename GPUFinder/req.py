@@ -14,8 +14,13 @@ def getter():
 	ips=reader()
 	for i in ips:
 		print(i)
-		f=requests.get(f'http://{i}/gpu')
-		text="<h1>"+i[:i.find(":")]+"的信息</h1>"+ f.text
+		f=""
+		try:
+			f=requests.get(f'http://{i}/gpu')
+			f=f.text
+		except:
+			f="这机子联系不上，下一个！"
+		text="<h1>"+i[:i.find(":")]+"的信息</h1>"+ f
 		e=e+text
 	return e
 
