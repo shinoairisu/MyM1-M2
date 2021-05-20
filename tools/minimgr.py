@@ -128,7 +128,7 @@ class minimgr(object):
 	#取最好的score进行缓存。调用本函数num次后持久化一次。mode有 min,max ...诸多模式。
 	#为min时,选取前面最小的值保存。threshold是一个阈值。如果score<最小值-threshold，才会认为更小
 	#此处的score是一个标量
-	#name是为了偷懒做的。给买个save起个名字，就可以使用minimgr类保存不同的文件
+	#name是为了偷懒做的。给每个save起个名字，就可以使用minimgr类保存不同的文件
 	def best_save(self,score,content,filename,mode="min",threshold=1e-10,num=5,name="1"):
 		if ("best_save_{}".format(name) in self.num) == False:
 			self.num["best_save_{}".format(name)]=0
@@ -207,18 +207,18 @@ class minimgr(object):
 		self._update("cache_save",name,content,mode="append")
 		return self._save("cache_save",name,filename,num,score=False,mode="append")
 
+	#此处返回布尔值，每隔num次返回一个bool,用以做计数器
+	def counter(self,num=5,name="1"):
+		self._dic_maker("counter",name,0,score=None)
+		self.num[self._dicname("counter",name)]+=1
+		if self.num[self._dicname("counter",name)]>=num:
+			self.num[self._dicname("counter",name)]=0
+			return True
+
 if __name__ == '__main__':
 	import time
 	mi=minimgr("tester")
 	epoch=epochmgr(20)
-	def la(newscore,oldscore):
-		if newscore<oldscore:
-			return True
 	for i in epoch.epoch():
-		a=mi.lambda_save(i,i,"test.pth",la)
-		a=mi.best_save(i,i,"test2.pth",mode="max")
-		if a!="":
-			print(a)
-	x=mi.load("test.pth")
-	x2=mi.load("test2.pth")
-	print(x,x2)
+		if mi.counter(8):
+			print("又八次")
