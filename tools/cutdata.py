@@ -17,6 +17,7 @@ def getfilename(file):
 
 def makefile(folder,trainp):
 	folder=folder.replace("\\","/")
+	folder=folder.replace("\"","")
 	files=glob.glob(folder+"/*.*")
 	random.shuffle(files)
 	if trainp == "":
@@ -34,11 +35,13 @@ def makefile(folder,trainp):
 	with open("train.csv",'w',encoding='utf-8') as f:
 		f.write("filename,mode\n")
 		f.write(txt)
-	print("分割完毕！")
+	print("划分完毕！")
 
 def makedatasetbyfile(folder,file):
 	folder=folder.replace("\\","/")
+	folder=folder.replace("\"","")
 	file=file.replace("\\","/")
+	file=file.replace("\"","")
 	os.mkdir(folder+"/train")
 	os.mkdir(folder+"/test")
 	csv=pd.read_csv(file)
